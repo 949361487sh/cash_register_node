@@ -11,7 +11,7 @@
  Target Server Version : 50528
  File Encoding         : 65001
 
- Date: 13/04/2021 13:53:56
+ Date: 13/04/2021 17:07:18
 */
 
 SET NAMES utf8mb4;
@@ -81,22 +81,22 @@ INSERT INTO `commoditytype` VALUES (44, '电风扇', NULL, '商品品牌');
 -- ----------------------------
 DROP TABLE IF EXISTS `member`;
 CREATE TABLE `member`  (
-  `card` int(11) NOT NULL COMMENT '会员卡号',
-  `time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '注册时间',
+  `createTime` datetime NULL DEFAULT NULL COMMENT '注册时间',
   `name` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '会员姓名',
   `sex` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '性别',
-  `age` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '年纪',
   `tel` varchar(13) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '电话',
   `integral` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '积分',
   `balance` varchar(13) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '余额',
-  PRIMARY KEY (`card`) USING BTREE
+  `birthday` datetime NULL DEFAULT NULL COMMENT '生日',
+  `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '地址',
+  `updateTime` datetime NULL DEFAULT NULL COMMENT '更新日期'
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of member
 -- ----------------------------
-INSERT INTO `member` VALUES (110, '2021-3-34', '小胖', '1', '18', '13301685003', '90', '120');
-INSERT INTO `member` VALUES (220, '', '无敌', '2', '29', '18355017897', '188', '200');
+INSERT INTO `member` VALUES ('2021-04-13 16:44:56', '苏淮', '男生', '13301685003', '0', NULL, '1991-10-31 00:00:00', '滁州市南谯区', '2021-04-13 16:44:56');
+INSERT INTO `member` VALUES ('2021-04-13 16:51:55', '小胖', '男生', '17521012461', '0', NULL, '2021-04-07 00:00:00', '', '2021-04-13 16:51:55');
 
 -- ----------------------------
 -- Table structure for stock

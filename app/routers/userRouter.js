@@ -20,4 +20,5 @@ module.exports = app => {
 	router.post('/commodity/delStock', controller.commodity.delStock);
 	router.post('/commodity/searchStockAdd', controller.commodity.searchStockAdd);
 	router.post('/cashRegister/getMember', controller.userLogin.getMember);
+	router.post('/cashRegister/addMember', controller.userLogin.addMember);
 };
