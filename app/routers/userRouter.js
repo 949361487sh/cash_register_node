@@ -18,5 +18,6 @@ module.exports = app => {
 	router.post('/commodity/searchStock', controller.commodity.searchStock);
 	router.post('/commodity/uploadFile', controller.commodity.uploadFile);
 	router.post('/commodity/delStock', controller.commodity.delStock);
+	router.post('/commodity/searchStockAdd', controller.commodity.searchStockAdd);
 	router.post('/cashRegister/getMember', controller.userLogin.getMember);
 };

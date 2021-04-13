@@ -69,6 +69,7 @@ class CommodityController extends BaseController {
 		const {
 			ctx
 		} = this;
+		// 库存搜索
 		const { commodityTitle, termOfValidityEnd, termOfValidityStart, isDelete, pageSize, pageNo } = ctx.request.body || {}
 		const isDeleteSql = isDelete == '2' ? '' : `isDelete = ${isDelete} and `
 		let sql = `select * from stock where ${isDeleteSql} commodityTitle like '%${commodityTitle}%' and (termOfValidity <= ${termOfValidityEnd} and termOfValidity >= ${termOfValidityStart}) ORDER BY id DESC LIMIT ${(pageNo - 1) * 10},${pageSize}  `
@@ -79,6 +80,22 @@ class CommodityController extends BaseController {
 		console.log(getContData.length, '获取的长度');
 		if (data) {
 			this.success(data, getContData.length)
+		} else {
+			this.error('查询失败')
+		}
+	}
+	// 首页查询
+	async searchStockAdd() {
+		const {
+			ctx
+		} = this;
+		// 首页查询
+		const { commodityTitle, code } = ctx.request.body || {}
+		let sql = `select * from stock where commodityTitle like '%${commodityTitle}%' or code like '%${code}%'`
+		console.log(sql, '执行sql');
+		const data = await this.app.mysql.query(sql);
+		if (data) {
+			this.success(data)
 		} else {
 			this.error('查询失败')
 		}
