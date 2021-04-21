@@ -11,7 +11,7 @@
  Target Server Version : 50528
  File Encoding         : 65001
 
- Date: 13/04/2021 17:07:18
+ Date: 21/04/2021 16:08:15
 */
 
 SET NAMES utf8mb4;
@@ -82,21 +82,75 @@ INSERT INTO `commoditytype` VALUES (44, '电风扇', NULL, '商品品牌');
 DROP TABLE IF EXISTS `member`;
 CREATE TABLE `member`  (
   `createTime` datetime NULL DEFAULT NULL COMMENT '注册时间',
-  `name` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '会员姓名',
+  `memberName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '会员姓名',
   `sex` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '性别',
   `tel` varchar(13) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '电话',
   `integral` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '积分',
   `balance` varchar(13) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '余额',
   `birthday` datetime NULL DEFAULT NULL COMMENT '生日',
   `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '地址',
-  `updateTime` datetime NULL DEFAULT NULL COMMENT '更新日期'
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+  `updateTime` datetime NULL DEFAULT NULL COMMENT '更新日期',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `state` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '是否禁用  0 正常 1 禁用',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of member
 -- ----------------------------
-INSERT INTO `member` VALUES ('2021-04-13 16:44:56', '苏淮', '男生', '13301685003', '0', NULL, '1991-10-31 00:00:00', '滁州市南谯区', '2021-04-13 16:44:56');
-INSERT INTO `member` VALUES ('2021-04-13 16:51:55', '小胖', '男生', '17521012461', '0', NULL, '2021-04-07 00:00:00', '', '2021-04-13 16:51:55');
+INSERT INTO `member` VALUES ('2021-04-20 14:01:42', '张三', '男生', '110', '0', NULL, '2020-04-08 00:00:00', '', '2021-04-21 15:42:26', 1, '0');
+INSERT INTO `member` VALUES ('2021-04-20 14:01:58', '李四', '男生', '220', '0', NULL, '2021-04-15 00:00:00', '', '2021-04-21 15:57:20', 2, '1');
+INSERT INTO `member` VALUES ('2021-04-20 14:50:36', '小胖', '男生', '123', '0', NULL, '2021-04-22 00:00:00', '', '2021-04-21 15:42:25', 3, '0');
+INSERT INTO `member` VALUES ('2021-04-20 15:18:43', '无敌更新---222', '男生', '990', '222', '', '2021-04-28 00:00:00', '滁州', '2021-04-21 15:42:25', 4, '0');
+INSERT INTO `member` VALUES ('2021-04-20 17:28:03', '新增2222', '男生', '2222', '203', '', '2021-04-06 00:00:00', '', '2021-04-21 15:57:17', 5, '1');
+
+-- ----------------------------
+-- Table structure for neworders
+-- ----------------------------
+DROP TABLE IF EXISTS `neworders`;
+CREATE TABLE `neworders`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `orderNumber` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单号',
+  `addReceivablePic` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '应收金额',
+  `receiptsPic` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '实收金额',
+  `giveChange` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '找零',
+  `createTime` datetime NULL DEFAULT NULL,
+  `updateTime` datetime NULL DEFAULT NULL,
+  `discount` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '优惠',
+  `allPic` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品总金额',
+  `commodityIds` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品id',
+  `memberName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '会员名称',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 37 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of neworders
+-- ----------------------------
+INSERT INTO `neworders` VALUES (34, '20210416153625', '105', '105', '0', '2021-04-12 15:36:34', NULL, '0', '105', '17,16', NULL);
+INSERT INTO `neworders` VALUES (35, '20210416153634', '75', '75', '0', '2021-04-16 15:36:52', NULL, '0', '75', '9,10,11', NULL);
+INSERT INTO `neworders` VALUES (36, '20210416153753', '945', '945', '0', '2021-04-16 15:38:05', NULL, '105', '1050', '11,13', '苏淮');
+
+-- ----------------------------
+-- Table structure for purchase
+-- ----------------------------
+DROP TABLE IF EXISTS `purchase`;
+CREATE TABLE `purchase`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `newworderId` int(11) NULL DEFAULT NULL,
+  `stockId` int(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of purchase
+-- ----------------------------
+INSERT INTO `purchase` VALUES (5, 34, 16);
+INSERT INTO `purchase` VALUES (6, 34, 17);
+INSERT INTO `purchase` VALUES (7, 35, 10);
+INSERT INTO `purchase` VALUES (8, 35, 9);
+INSERT INTO `purchase` VALUES (9, 35, 11);
+INSERT INTO `purchase` VALUES (10, 36, 11);
+INSERT INTO `purchase` VALUES (11, 36, 13);
 
 -- ----------------------------
 -- Table structure for stock
