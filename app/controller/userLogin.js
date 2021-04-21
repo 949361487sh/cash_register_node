@@ -52,40 +52,7 @@ class HomeController extends BaseController {
       this.error('获取商品失败')
     }
   }
-  // 查找会员信息
-  async getMember() {
-    const { ctx } = this;
-    const payload = ctx.request.body || {}
 
-    if (payload) {
-      const data = await this.app.mysql.query(`SELECT * FROM member WHERE name='${payload.val}' or tel='${payload.val}'`);
-      console.log(data)
-      if (data && data.length > 0) {
-        this.success(data[0])
-      } else {
-        this.error('未查到该会员信息')
-      }
-    } else {
-      this.error('未查到该会员信息')
-    }
-  }
-  // 新增会员信息
-  async addMember() {
-    const { ctx } = this;
-    let { name, // 姓名
-      tel, // 电话
-      birthday, // 生日
-      address, // 地址
-      sex, } = ctx.request.body || {}
-    try {
-      await this.app.mysql.insert('member', { name, tel, address, sex, birthday, createTime: new Date(), updateTime: new Date(), integral: 0 });
-      this.message('会员注册成功')
-    } catch (error) {
-      this.error('会员注册失败!')
-    }
-
-
-  }
 }
 
 module.exports = HomeController;

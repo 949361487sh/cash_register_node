@@ -64,6 +64,50 @@ class CommodityController extends BaseController {
 			this.error('新增失败')
 		}
 	}
+	// 新增订单
+	async newOrders() {
+		const {
+			ctx
+		} = this;
+		const {
+			addReceivablePic,
+			receiptsPic,
+			giveChange,
+			orderNumber,
+			discount,
+			allPic,
+			commodityIds,
+			memberName
+		} = ctx.request.body || {}
+		const data = await this.app.mysql.insert('neworders', {
+			addReceivablePic,
+			receiptsPic,
+			giveChange,
+			createTime: new Date(),
+			orderNumber,
+			discount,
+			allPic,
+			commodityIds,
+			memberName
+		});
+		if (data) {
+			const getData = await this.app.mysql.select('neworders', { where: { orderNumber } })
+			console.log(getData, 'getData数据');
+			let purchase = commodityIds.split(',')
+			console.log(purchase, 'purchase的数据');
+			purchase.forEach(async item => {
+				await this.app.mysql.insert(
+					'purchase', { newworderId: getData[0].id, stockId: item }
+				);
+
+			});
+
+
+			this.success(getData)
+		} else {
+			this.error('交易失败')
+		}
+	}
 	// 搜索商品
 	async searchStock() {
 		const {
@@ -80,6 +124,46 @@ class CommodityController extends BaseController {
 		console.log(getContData.length, '获取的长度');
 		if (data) {
 			this.success(data, getContData.length)
+		} else {
+			this.error('查询失败')
+		}
+	}
+	// 根据订单查询商品列表
+	async searchOderNumberStock() {
+		const {
+			ctx
+		} = this;
+		// 库存搜索
+		const { id } = ctx.request.body || {}
+		const getStock = `SELECT * FROM stock WHERE id IN (SELECT stockId FROM purchase WHERE newworderId=${id})`
+		console.log(getStock, '：getStock---sql');
+		const data = await this.app.mysql.query(getStock);
+		console.log(data.length, '获取的长度');
+		if (data) {
+			this.success(data, data.length)
+		} else {
+			this.error('查询失败')
+		}
+	}
+	// 订单查询
+	async searchOderNumber() {
+		const {
+			ctx
+		} = this;
+		// 库存搜索
+		const { orderNumber, timeStart, timeEnd, memberName } = ctx.request.body || {}
+		let time = '', member = '';
+		if (timeStart != '') {
+			time = `and createTime >= '${timeStart} 00:00:00' and createTime <= '${timeEnd} 23:59:59'`
+		}
+		if (memberName != '') {
+			member = `and memberName like '%${memberName}%'`
+		}
+		const sql = `select * from neworders where orderNumber like '%${orderNumber}%' ${member} ${time} ORDER BY id DESC`
+		const orderNumberSql = await this.app.mysql.query(sql);
+		console.log(sql, '==============orderNumberSql');
+		if (orderNumberSql) {
+			this.success(orderNumberSql, orderNumberSql.length)
 		} else {
 			this.error('查询失败')
 		}
