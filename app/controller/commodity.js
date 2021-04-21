@@ -174,8 +174,8 @@ class CommodityController extends BaseController {
 			ctx
 		} = this;
 		// 首页查询
-		const { commodityTitle, code } = ctx.request.body || {}
-		let sql = `select * from stock where commodityTitle like '%${commodityTitle}%' or code like '%${code}%'`
+		const { commodityTitle, code, isDelete } = ctx.request.body || {}
+		let sql = `select * from stock where (commodityTitle like '%${commodityTitle}%' or code like '%${code}%') and isDelete=${isDelete}`
 		console.log(sql, '执行sql');
 		const data = await this.app.mysql.query(sql);
 		if (data) {
