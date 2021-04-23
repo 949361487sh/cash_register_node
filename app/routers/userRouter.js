@@ -22,6 +22,10 @@ module.exports = app => {
 	router.post('/commodity/searchOderNumberStock', controller.commodity.searchOderNumberStock);
 	router.post('/commodity/searchOderNumber', controller.commodity.searchOderNumber);
 	router.post('/commodity/searchStockAdd', controller.commodity.searchStockAdd);
+	router.post('/commodity/delOrder', controller.commodity.delOrder);
+
+
+
 	router.post('/cashRegister/getMember', controller.member.getMember);
 	router.post('/cashRegister/getMemberList', controller.member.getMemberList);
 	router.post('/cashRegister/upMember', controller.member.upMember);

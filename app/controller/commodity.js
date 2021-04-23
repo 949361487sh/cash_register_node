@@ -3,6 +3,7 @@
 const BaseController = require('./base')
 const fs = require('fs')
 const { resolve, join } = require('path')
+const moment = require('moment')
 class CommodityController extends BaseController {
 	async getType() {
 		const {
@@ -45,6 +46,20 @@ class CommodityController extends BaseController {
 			this.error('删除失败')
 		}
 	}
+	// 订单退款
+	async delOrder() {
+		const {
+			ctx
+		} = this;
+		const { id } = ctx.request.body || {}
+		try {
+			const updateTime = moment().format('YYYY-MM-DD HH:mm:ss')
+			await this.app.mysql.update('neworders', { id, refund: '1', updateTime: updateTime });
+			this.message('退款成功')
+		} catch (error) {
+			this.error('退款失败')
+		}
+	}
 	// 新增 商品分类，品牌，单位
 	async addType() {
 		const {
@@ -79,11 +94,14 @@ class CommodityController extends BaseController {
 			commodityIds,
 			memberName
 		} = ctx.request.body || {}
+		const date = moment().format('YYYY-MM-DD HH:mm:ss')
+		console.log(date, '获取订单的时间');
 		const data = await this.app.mysql.insert('neworders', {
 			addReceivablePic,
 			receiptsPic,
 			giveChange,
-			createTime: new Date(),
+			createTime: date,
+			updateTime: date,
 			orderNumber,
 			discount,
 			allPic,
@@ -151,15 +169,18 @@ class CommodityController extends BaseController {
 			ctx
 		} = this;
 		// 库存搜索
-		const { orderNumber, timeStart, timeEnd, memberName } = ctx.request.body || {}
-		let time = '', member = '';
+		const { orderNumber, timeStart, timeEnd, memberName, refund } = ctx.request.body || {}
+		let time = '', member = '', isRefund = `and refund is null`;
 		if (timeStart != '') {
 			time = `and createTime >= '${timeStart} 00:00:00' and createTime <= '${timeEnd} 23:59:59'`
 		}
 		if (memberName != '') {
 			member = `and memberName like '%${memberName}%'`
 		}
-		const sql = `select * from neworders where orderNumber like '%${orderNumber}%' ${member} ${time} ORDER BY id DESC`
+		if (refund == '1') {
+			isRefund = `and refund = '1'`
+		}
+		const sql = `select * from neworders where orderNumber like '%${orderNumber}%' ${isRefund} ${member} ${time} ORDER BY id DESC`
 		const orderNumberSql = await this.app.mysql.query(sql);
 		console.log(sql, '==============orderNumberSql');
 		if (orderNumberSql) {
