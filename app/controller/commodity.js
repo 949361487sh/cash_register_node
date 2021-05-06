@@ -136,12 +136,19 @@ class CommodityController extends BaseController {
 		const isDeleteSql = isDelete == '2' ? '' : `isDelete = ${isDelete} and `
 		let sql = `select * from stock where ${isDeleteSql} commodityTitle like '%${commodityTitle}%' and (termOfValidity <= ${termOfValidityEnd} and termOfValidity >= ${termOfValidityStart}) ORDER BY id DESC LIMIT ${(pageNo - 1) * 10},${pageSize}  `
 		let getCont = `select * from stock where ${isDeleteSql} commodityTitle like '%${commodityTitle}%' and (termOfValidity <= ${termOfValidityEnd} and termOfValidity >= ${termOfValidityStart})`
-		console.log(sql, '执行sql');
+		console.log(sql, '库存搜索执行sql');
 		const data = await this.app.mysql.query(sql);
 		const getContData = await this.app.mysql.query(getCont);
+		const allTitle = await this.app.mysql.query('select commodityTitle from stock where isDelete=0');
 		console.log(getContData.length, '获取的长度');
+
 		if (data) {
-			this.success(data, getContData.length)
+			this.ctx.body = {
+				code: 0,
+				data,
+				allTitle,
+				total: getContData.length
+			}
 		} else {
 			this.error('查询失败')
 		}
@@ -272,11 +279,11 @@ class CommodityController extends BaseController {
 				supplier, // 供货商
 				memberPic, // 会员价
 				remark,
+				isDelete: '0',
+				updateTime: new Date(),
 				createTime: new Date()
 			});
 		}
-
-
 		if (data) {
 			if (id) {
 				this.success({ id })
