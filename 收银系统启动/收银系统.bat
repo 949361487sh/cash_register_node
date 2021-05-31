@@ -1,0 +1,1 @@
+cmd /k "cd /d C:\Users\Administrator\Desktop\shouyin\cash_register&&npm run dev"
